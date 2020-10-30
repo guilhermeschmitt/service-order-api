@@ -4,8 +4,8 @@
 	<property name="LONG.VARCHAR" value="TEXT" dbms="postgresql" />
 
 	<changeSet author="admin" id="01-1">
-	  <createTable tableName="CLIENTE">
-	    <column name="ID_CLIENTE" type="BIGINT">
+	  <createTable tableName="CLIENT">
+	    <column name="ID_CLIENT" type="BIGINT">
 	      <constraints primaryKey="true" />
 	    </column>
 	    <column name="NAME" type="VARCHAR(60)">
@@ -18,5 +18,8 @@
 	  </createTable>
 	</changeSet>
 
+	<changeSet author="admin" id="01-2">
+		<createSequence sequenceName="ID_CLIENT" startValue="1" />
+	</changeSet>
 
 </databaseChangeLog>

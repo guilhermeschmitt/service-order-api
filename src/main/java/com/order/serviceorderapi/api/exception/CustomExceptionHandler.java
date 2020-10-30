@@ -1,6 +1,6 @@
 package com.order.serviceorderapi.api.exception;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		ExceptionModel model = new ExceptionModel();
 
 		model.setTitle(ex.getMessage());
-		model.setDateHour(LocalDateTime.now());
+		model.setDateHour(OffsetDateTime.now());
 		model.setStatus(HttpStatus.BAD_REQUEST.value());
 		
 		return handleExceptionInternal(ex, model, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
@@ -52,7 +52,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 		model.setStatus(status.value());
 		model.setFields(exceptionFields);
-		model.setDateHour(LocalDateTime.now());
+		model.setDateHour(OffsetDateTime.now());
 		model.setTitle("Campos inválidos! Faça o preenchimento correto dos campos listados e tente novamente.");
 		
 		return super.handleExceptionInternal(ex, model, headers, status, request);

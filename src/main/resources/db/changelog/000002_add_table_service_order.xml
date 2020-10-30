@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<property name="LONG.VARCHAR" value="TEXT" dbms="postgresql" />
+
+	<changeSet author="admin" id="02-1">
+	  <createTable tableName="SERVICE_ORDER">
+	    <column name="ID_SERVICE_ORDER" type="BIGINT">
+	      <constraints primaryKey="true" />
+	    </column>
+	    <column name="ID_CLIENT" type="BIGINT">
+	      <constraints nullable="false" />
+	    </column>
+	    <column name="DESCRIPTION" type="TEXT">
+	      <constraints nullable="false"/>
+	    </column>
+	    <column name="PRICE" type="DECIMAL(10,2)">
+	    	<constraints nullable="false"/>
+	    </column>
+	    <column name="STATUS" type="VARCHAR(20)">
+	    	<constraints nullable="false"/>
+	    </column>
+	    <column name="OPEN_DATE" type="DATETIME">
+	    	<constraints nullable="false"/>
+	    </column>
+	    <column name="END_DATE" type="DATETIME"/>
+	  </createTable>
+	  
+	  <addForeignKeyConstraint 
+			baseColumnNames="ID_CLIENT" 
+			baseTableName="SERVICE_ORDER" 
+			constraintName="FK_SERVICE_ORDER_ID_CLIENT" 
+			referencedColumnNames="ID_CLIENT" 
+			referencedTableName="CLIENT" 
+		/>
+	</changeSet>
+	
+	<changeSet author="admin" id="02-2">
+		<createSequence sequenceName="ID_SERVICE_ORDER" startValue="1" />
+	</changeSet>
+
+
+</databaseChangeLog>

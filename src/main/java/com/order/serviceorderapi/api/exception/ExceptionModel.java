@@ -1,6 +1,6 @@
 package com.order.serviceorderapi.api.exception;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,7 @@ public class ExceptionModel {
 
 	private String title;
 	private Integer status;
-	private LocalDateTime dateHour;
+	private OffsetDateTime dateHour;
 	private List<ExceptionField> fields;
 	
 	
