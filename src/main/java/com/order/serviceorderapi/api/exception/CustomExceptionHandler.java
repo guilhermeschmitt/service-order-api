@@ -13,16 +13,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.order.serviceorderapi.api.exception.ExceptionModel.ExceptionField;
+import com.order.serviceorderapi.domain.exception.DomainCustomException;
 
 @ControllerAdvice
-public class ExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@ExceptionHandler(DomainCustomException.class)
+	public ResponseEntity<Object> handleDomainCustomException(DomainCustomException ex, WebRequest request) {
+		ExceptionModel model = new ExceptionModel();
+
+		model.setTitle(ex.getMessage());
+		model.setDateHour(LocalDateTime.now());
+		model.setStatus(HttpStatus.BAD_REQUEST.value());
+		
+		return handleExceptionInternal(ex, model, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

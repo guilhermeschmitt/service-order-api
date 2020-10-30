@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order.serviceorderapi.domain.model.Client;
-import com.order.serviceorderapi.domain.repository.ClientRepository;
+import com.order.serviceorderapi.domain.service.ClientService;
 
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
 	
 	@Autowired
-	private ClientRepository clientRepository;
+	private ClientService clientService;
 
 	public List<Client> findAll() {
-		return clientRepository.findAll();
+		return clientService.findAll();
 	}
 	
 	@GetMapping("/{clientId}")
 	public ResponseEntity<Client> findById(@PathVariable("clientId") Long clientId) {
-		Optional<Client> client = clientRepository.findById(clientId);
+		Optional<Client> client = clientService.findById(clientId);
 		
 		if(client.isPresent())
 			return ResponseEntity.ok(client.get());
@@ -44,25 +44,23 @@ public class ClientController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Client save(@Valid @RequestBody Client client) {
-		return clientRepository.save(client);
+		return clientService.save(client);
 	}
 	
 	@PutMapping("/{clientId}")
 	public ResponseEntity<Client> update(@Valid @RequestBody Client client, @PathVariable("clientId") Long clientId) {
-		if(!clientRepository.existsById(clientId))
+		if(!clientService.existsById(clientId))
 			return ResponseEntity.notFound().build();
 		
-		client.setId(clientId);
-		
-		return ResponseEntity.ok(clientRepository.save(client));
+		return ResponseEntity.ok(clientService.update(client, clientId));
 	}
 	
 	@DeleteMapping("/{clientId}")
 	public ResponseEntity<Void> delete(@PathVariable("clientId") Long clientId) {
-		if(!clientRepository.existsById(clientId))
+		if(!clientService.existsById(clientId))
 			return ResponseEntity.notFound().build();
 		
-		clientRepository.deleteById(clientId);
+		clientService.deleteById(clientId);
 		return ResponseEntity.noContent().build();
 	}
 	

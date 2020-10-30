@@ -8,4 +8,6 @@ import com.order.serviceorderapi.domain.model.Client;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
+	Client findByEmail(String email);
+
 }
