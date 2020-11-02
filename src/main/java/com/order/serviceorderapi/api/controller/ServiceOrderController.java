@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.order.serviceorderapi.api.model.dto.ServiceOrderDTO;
+import com.order.serviceorderapi.api.model.form.ServiceOrderForm;
 import com.order.serviceorderapi.domain.model.ServiceOrder;
 import com.order.serviceorderapi.domain.service.ServiceOrderService;
 
@@ -28,21 +30,21 @@ public class ServiceOrderController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ServiceOrder save(@Valid @RequestBody ServiceOrder service) {
+	public ServiceOrderDTO save(@Valid @RequestBody ServiceOrderForm service) {
 		return serviceOrderService.save(service);
 	}
 	
 	@GetMapping
-	public List<ServiceOrder> findAll() {
+	public List<ServiceOrderDTO> findAll() {
 		return serviceOrderService.findAll();
 	}
 	
 	@GetMapping("/{serviceOrderId}")
-	public ResponseEntity<ServiceOrder> findById(@PathVariable("serviceOrderId") Long serviceOrderId) {
+	public ResponseEntity<ServiceOrderDTO> findById(@PathVariable("serviceOrderId") Long serviceOrderId) {
 		Optional<ServiceOrder> service = serviceOrderService.findById(serviceOrderId);
 		
 		if(!service.isPresent())
 			return ResponseEntity.notFound().build();
-		return ResponseEntity.ok(service.get());
+		return ResponseEntity.ok(serviceOrderService.mapper(service.get()));
 	}
 }

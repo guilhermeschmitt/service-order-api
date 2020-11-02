@@ -3,10 +3,14 @@ package com.order.serviceorderapi.domain.service;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.order.serviceorderapi.api.model.dto.ServiceOrderDTO;
+import com.order.serviceorderapi.api.model.form.ServiceOrderForm;
 import com.order.serviceorderapi.domain.exception.DomainCustomException;
 import com.order.serviceorderapi.domain.model.Client;
 import com.order.serviceorderapi.domain.model.ServiceOrder;
@@ -23,22 +27,39 @@ public class ServiceOrderService {
 	@Autowired
 	private ClientRepository clientRepository;
 	
-	public ServiceOrder save(ServiceOrder service) {
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	public ServiceOrderDTO save(ServiceOrderForm serviceForm) {
+		ServiceOrder service = this.formMapper(serviceForm);
+		
 		Client client = clientRepository.findById(service.getClient().getId()).orElseThrow(() -> new DomainCustomException("Cliente não encontrado!"));
 		
 		service.setClient(client);
 		service.setOpenDate(OffsetDateTime.now());
 		service.setStatus(ServiceOrderStatus.OPEN);
 		
-		return serviceOrderRepository.save(service);
+		return this.mapper(serviceOrderRepository.save(service));
 	}
 
-	public List<ServiceOrder> findAll() {
-		return serviceOrderRepository.findAll();
+	public List<ServiceOrderDTO> findAll() {
+		List<ServiceOrder> services = serviceOrderRepository.findAll();
+		return this.mapperList(services);
 	}
 
 	public Optional<ServiceOrder> findById(Long serviceOrderId) {
 		return serviceOrderRepository.findById(serviceOrderId);
 	}
 	
+	public ServiceOrderDTO mapper(ServiceOrder service) {
+		return modelMapper.map(service, ServiceOrderDTO.class);
+	}
+	
+	public List<ServiceOrderDTO> mapperList(List<ServiceOrder> services) {
+		return services.stream().map(service -> this.mapper(service)).collect(Collectors.toList());
+	}
+
+	public ServiceOrder formMapper(ServiceOrderForm serviceForm) {
+		return modelMapper.map(serviceForm, ServiceOrder.class);
+	}
 }
