@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.order.serviceorderapi.api.model.dto.ServiceOrderDTO;
 import com.order.serviceorderapi.api.model.form.ServiceOrderForm;
 import com.order.serviceorderapi.domain.model.ServiceOrder;
+import com.order.serviceorderapi.domain.model.ServiceOrderStatus;
 import com.order.serviceorderapi.domain.service.ServiceOrderService;
 
 @RestController
@@ -46,5 +48,17 @@ public class ServiceOrderController {
 		if(!service.isPresent())
 			return ResponseEntity.notFound().build();
 		return ResponseEntity.ok(serviceOrderService.mapper(service.get()));
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PutMapping("/{serviceOrderId}/finish")
+	public void finish(@PathVariable("serviceOrderId") Long serviceOrderId) {
+		serviceOrderService.changeStatusService(serviceOrderId, ServiceOrderStatus.FINISHED);
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PutMapping("/{serviceOrderId}/cancel")
+	public void cancel(@PathVariable("serviceOrderId") Long serviceOrderId) {
+		serviceOrderService.changeStatusService(serviceOrderId, ServiceOrderStatus.CANCELED);
 	}
 }
