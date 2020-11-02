@@ -2,6 +2,8 @@ package com.order.serviceorderapi.domain.model;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -41,6 +44,9 @@ public class ServiceOrder {
 	@JoinColumn(name = "ID_CLIENT")
 	@ConvertGroup(from = Default.class, to = ValidationGroups.ClientId.class)
 	private Client client;
+	
+	@OneToMany(mappedBy = "service")
+	private List<Comment> comments = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
 	@JsonProperty(access = Access.READ_ONLY)

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.order.serviceorderapi.api.exception.ExceptionModel.ExceptionField;
 import com.order.serviceorderapi.domain.exception.DomainCustomException;
+import com.order.serviceorderapi.domain.exception.NotFoundCustomException;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -35,6 +36,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		model.setStatus(HttpStatus.BAD_REQUEST.value());
 		
 		return handleExceptionInternal(ex, model, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler(NotFoundCustomException.class)
+	public ResponseEntity<Object> handleNotFoundCustomException(NotFoundCustomException ex, WebRequest request) {
+		ExceptionModel model = new ExceptionModel();
+
+		model.setTitle(ex.getMessage());
+		model.setDateHour(OffsetDateTime.now());
+		model.setStatus(HttpStatus.NOT_FOUND.value());
+		
+		return handleExceptionInternal(ex, model, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 	
 	@Override

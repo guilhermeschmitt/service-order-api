@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+	<property name="LONG.VARCHAR" value="TEXT" dbms="postgresql" />
+
+	<changeSet author="admin" id="03-1">
+	  <createTable tableName="COMMENT">
+	    <column name="ID_COMMENT" type="BIGINT">
+	      <constraints primaryKey="true" />
+	    </column>
+	    <column name="ID_SERVICE_ORDER" type="BIGINT">
+	      <constraints nullable="false" />
+	    </column>
+	    <column name="DESCRIPTION" type="TEXT">
+	      <constraints nullable="false"/>
+	    </column>
+	    <column name="SEND_DATE" type="DATETIME">
+	    	<constraints nullable="false"/>
+	    </column>
+	  </createTable>
+	  
+	  <addForeignKeyConstraint 
+			baseColumnNames="ID_SERVICE_ORDER" 
+			baseTableName="COMMENT" 
+			constraintName="FK_COMMENT_ID_SERVICE_ORDER" 
+			referencedColumnNames="ID_SERVICE_ORDER" 
+			referencedTableName="SERVICE_ORDER" 
+		/>
+	</changeSet>
+	
+	<changeSet author="admin" id="03-2">
+		<createSequence sequenceName="ID_COMMENT" startValue="1" />
+	</changeSet>
+
+
+</databaseChangeLog>
